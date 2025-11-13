@@ -20,6 +20,7 @@ import (
 	"github.com/m-goku/rkt/render"
 	"github.com/m-goku/rkt/sessions"
 	"github.com/robfig/cron/v3"
+	"github.com/joho/godotenv"
 )
 
 const version = "1.0.0"
