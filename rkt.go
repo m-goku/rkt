@@ -15,7 +15,6 @@ import (
 	"github.com/dgraph-io/badger/v3"
 	"github.com/go-chi/chi/v5"
 	"github.com/gomodule/redigo/redis"
-	"github.com/joho/godotenv"
 	"github.com/m-goku/rkt/cache"
 	"github.com/m-goku/rkt/mailer"
 	"github.com/m-goku/rkt/render"
@@ -108,10 +107,6 @@ func (r *RKT) New(rootPath string) error {
 	}
 
 	// load .env into the go environment of the app
-	err = godotenv.Load(rootPath + "/.env")
-	if err != nil {
-		return err
-	}
 
 	//create loggers
 	infoLog, errorLog := r.startLoggers()
