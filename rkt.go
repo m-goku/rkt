@@ -101,15 +101,15 @@ func (r *RKT) New(rootPath string) error {
 	}
 
 	
-    // if os.Getenv("RENDER") == "" {
-    //     if err := godotenv.Load(".env"); err != nil {
-    //         log.Println("⚠️ No .env file found locally, skipping...")
-    //     } else {
-    //         log.Println("✅ Loaded .env file for local development")
-    //     }
-    // } else {
-    //     log.Println("✅ Running on Render - using Render environment variables")
-    // }
+    if os.Getenv("RENDER") == "" {
+        if err := godotenv.Load(".env"); err != nil {
+            log.Println("⚠️ No .env file found locally, skipping...")
+        } else {
+            log.Println("✅ Loaded .env file for local development")
+        }
+    } else {
+        log.Println("✅ Running on Render - using Render environment variables")
+    }
 
 
 	//create loggers
