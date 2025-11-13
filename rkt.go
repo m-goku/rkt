@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -15,6 +16,7 @@ import (
 	"github.com/dgraph-io/badger/v3"
 	"github.com/go-chi/chi/v5"
 	"github.com/gomodule/redigo/redis"
+	"github.com/joho/godotenv"
 	"github.com/m-goku/rkt/cache"
 	"github.com/m-goku/rkt/mailer"
 	"github.com/m-goku/rkt/render"
@@ -101,10 +103,17 @@ func (r *RKT) New(rootPath string) error {
 	}
 
 	//check for .env file
-	err = r.checkDotEnv(rootPath)
-	if err != nil {
-		return err
+	// Load .env only if running locally (not on Render)
+if os.Getenv("RENDER") == "" {
+	if err := godotenv.Load(filepath.Join(rootPath, ".env")); err != nil {
+		log.Println("⚠️ No .env file found, skipping...")
+	} else {
+		log.Println("✅ Loaded .env file for local development")
 	}
+} else {
+	log.Println("✅ Running on Render - using environment variables")
+}
+
 
 	// load .env into the go environment of the app
 
@@ -296,13 +305,6 @@ func (r *RKT) ListenAndServe() {
 	r.ErrorLog.Fatal(err)
 }
 
-func (r *RKT) checkDotEnv(path string) error {
-	err := r.CreateFileIfNotExists(path)
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 func (r *RKT) startLoggers() (*log.Logger, *log.Logger) {
 	var infoLog *log.Logger
