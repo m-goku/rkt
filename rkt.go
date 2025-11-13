@@ -22,7 +22,6 @@ import (
 	"github.com/m-goku/rkt/render"
 	"github.com/m-goku/rkt/sessions"
 	"github.com/robfig/cron/v3"
-	"github.com/joho/godotenv"
 )
 
 const version = "1.0.0"
@@ -104,9 +103,15 @@ func (r *RKT) New(rootPath string) error {
 	}
 
 	//check for .env file
-	err = r.checkDotEnv(rootPath)
-	if err != nil {
-		return err
+	// Load .env only if running locally (not on Render)
+	if os.Getenv("RENDER") == "" {
+		if err := godotenv.Load(filepath.Join(rootPath, ".env")); err != nil {
+			log.Println("⚠️ No .env file found, skipping...")
+		} else {
+			log.Println("✅ Loaded .env file for local development")
+		}
+	} else {
+		log.Println("✅ Running on Render - using environment variables")
 	}
 
 	// load .env into the go environment of the app
@@ -298,7 +303,6 @@ func (r *RKT) ListenAndServe() {
 	err := server.ListenAndServe()
 	r.ErrorLog.Fatal(err)
 }
-
 
 func (r *RKT) startLoggers() (*log.Logger, *log.Logger) {
 	var infoLog *log.Logger
