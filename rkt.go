@@ -100,13 +100,17 @@ func (r *RKT) New(rootPath string) error {
 		return err
 	}
 
-	//check for .env file
-	err = r.checkDotEnv(rootPath)
-	if err != nil {
-		return err
-	}
+	
+    // if os.Getenv("RENDER") == "" {
+    //     if err := godotenv.Load(".env"); err != nil {
+    //         log.Println("⚠️ No .env file found locally, skipping...")
+    //     } else {
+    //         log.Println("✅ Loaded .env file for local development")
+    //     }
+    // } else {
+    //     log.Println("✅ Running on Render - using Render environment variables")
+    // }
 
-	// load .env into the go environment of the app
 
 	//create loggers
 	infoLog, errorLog := r.startLoggers()
